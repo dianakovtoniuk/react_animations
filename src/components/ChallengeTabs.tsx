@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { motion } from 'framer-motion';
 
 import Badge from './Badge';
 import type { Challenge, ChallengeStatus } from '../types/challenge';
@@ -18,9 +19,11 @@ function Tab({ isSelected, onSelect, badgeCaption, children }: TabProps) {
         onClick={onSelect}
       >
         {children}
-        <Badge caption={badgeCaption}></Badge>
+        <Badge key={badgeCaption} caption={badgeCaption}></Badge>
       </button>
-      {isSelected && <div className="active-tab-indicator" />}
+      {isSelected && (
+        <motion.div layoutId="tab-indicator" className="active-tab-indicator" />
+      )}
     </li>
   );
 }

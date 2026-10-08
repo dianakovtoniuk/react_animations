@@ -1,6 +1,6 @@
 import { useContext, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useAnimate, stagger } from 'framer-motion';
 
 import { ChallengesContext } from '../store/challenges-context';
 import Modal from './Modal';
@@ -15,6 +15,8 @@ export default function NewChallenge({ onDone }: NewChallengeProps) {
   const title = useRef<HTMLInputElement>(null);
   const description = useRef<HTMLTextAreaElement>(null);
   const deadline = useRef<HTMLInputElement>(null);
+
+  const [scope, animate] = useAnimate<HTMLFormElement>();
 
   const [selectedImage, setSelectedImage] = useState<ChallengeImage | null>(
     null
@@ -38,6 +40,12 @@ export default function NewChallenge({ onDone }: NewChallengeProps) {
       !enteredDeadline.trim() ||
       !selectedImage
     ) {
+      animate(
+        'input, textarea',
+        { x: [-10, 0, 10, 0] },
+        /** FIX FOR NEWER FRAMER MOTION -- no 'spring' transition  */
+        { type: 'tween', ease: 'linear', duration: 0.2, delay: stagger(0.05) }
+      );
       return;
     }
 
@@ -52,7 +60,7 @@ export default function NewChallenge({ onDone }: NewChallengeProps) {
 
   return (
     <Modal title="New Challenge" onClose={onDone}>
-      <form id="new-challenge" onSubmit={handleSubmit}>
+      <form id="new-challenge" onSubmit={handleSubmit} ref={scope}>
         <p>
           <label htmlFor="title">Title</label>
           <input ref={title} type="text" name="title" id="title" />
