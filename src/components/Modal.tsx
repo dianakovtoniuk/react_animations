@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { motion } from 'framer-motion';
 
 interface ModalProps {
   title: string;
@@ -11,11 +12,24 @@ export default function Modal({ title, children, onClose }: ModalProps) {
   return createPortal(
     <>
       <div className="backdrop" onClick={onClose} />
-      <dialog open className="modal">
+      <motion.dialog
+        variants={{
+          hidden: { opacity: 0, y: 30 },
+          visible: { opacity: 1, y: 0 },
+          /* FIX FOR NEWER FRAMER-MOTION */
+          exit: { opacity: 0, y: 30 },
+        }}
+        initial="hidden"
+        animate="visible"
+        /* FIX FOR NEWER FRAMER-MOTION */
+        exit="exit"
+        open
+        className="modal"
+      >
         <h2>{title}</h2>
         {children}
-      </dialog>
+      </motion.dialog>
     </>,
-    document.getElementById('modal') as HTMLElement
+    document.getElementById('modal')!
   );
 }

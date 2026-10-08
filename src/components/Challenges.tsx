@@ -3,7 +3,7 @@ import { useContext, useState } from 'react';
 import { ChallengesContext } from '../store/challenges-context';
 import ChallengeItem from './ChallengeItem';
 import ChallengeTabs from './ChallengeTabs';
-import type { ChallengeStatus } from '../types/challenge';
+import type { Challenge, ChallengeStatus } from '../types/challenge';
 
 export default function Challenges() {
   const { challenges } = useContext(ChallengesContext);
@@ -24,12 +24,12 @@ export default function Challenges() {
     });
   }
 
-  const filteredChallenges = {
-    active: challenges.filter((challenge : any) => challenge.status === 'active'),
+  const filteredChallenges: Record<ChallengeStatus, Challenge[]> = {
+    active: challenges.filter((challenge) => challenge.status === 'active'),
     completed: challenges.filter(
-      (challenge : any) => challenge.status === 'completed'
+      (challenge) => challenge.status === 'completed'
     ),
-    failed: challenges.filter((challenge : any) => challenge.status === 'failed'),
+    failed: challenges.filter((challenge) => challenge.status === 'failed'),
   };
 
   const displayedChallenges = filteredChallenges[selectedType];

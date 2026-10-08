@@ -1,5 +1,6 @@
 import { useContext, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
+import { motion } from 'framer-motion';
 
 import { ChallengesContext } from '../store/challenges-context';
 import Modal from './Modal';
@@ -27,9 +28,9 @@ export default function NewChallenge({ onDone }: NewChallengeProps) {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const enteredTitle = title.current!.value;
-    const enteredDescription = description.current!.value;
-    const enteredDeadline = deadline.current!.value;
+    const enteredTitle = title.current?.value ?? '';
+    const enteredDescription = description.current?.value ?? '';
+    const enteredDeadline = deadline.current?.value ?? '';
 
     if (
       !enteredTitle.trim() ||
@@ -67,17 +68,27 @@ export default function NewChallenge({ onDone }: NewChallengeProps) {
           <input ref={deadline} type="date" name="deadline" id="deadline" />
         </p>
 
-        <ul id="new-challenge-images">
+        <motion.ul
+          id="new-challenge-images"
+          variants={{
+            visible: { transition: { staggerChildren: 0.05 } },
+          }}
+        >
           {images.map((image) => (
-            <li
+            <motion.li
+              variants={{
+                hidden: { opacity: 0, scale: 0.5 },
+                visible: { opacity: 1, scale: [0.8, 1.3, 1] },
+              }}
+              exit={{ opacity: 1, scale: 1 }}
               key={image.alt}
               onClick={() => handleSelectImage(image)}
               className={selectedImage === image ? 'selected' : undefined}
             >
               <img {...image} />
-            </li>
+            </motion.li>
           ))}
-        </ul>
+        </motion.ul>
 
         <p className="new-challenge-actions">
           <button type="button" onClick={onDone}>

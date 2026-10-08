@@ -1,5 +1,5 @@
 interface BadgeProps {
-  caption: number;
+  caption: number | string;
 }
 
 export default function Badge({ caption }: BadgeProps) {
